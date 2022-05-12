@@ -5,6 +5,8 @@ select
 	--, so.reason as cr_shipped_reason
 	, case 
 		when v.code ilike 'CL_PARTNERS%%' then 'PARTNERS'
+		when rs.is_influencer then 'RAF-I'
+		when rs.referrer is not null then 'RAF'
 		when v.code ilike 'CL_REF%%' then 'RAF'
 		when (p2.name in ('Gifts_influencer','GIFTS_INFLUENCERSOLO')
 			or p2.name in ('CL_Influencers') 
@@ -25,14 +27,16 @@ select
 	, sum(sop.quantity) as qty
 	, sop.original_price 
 from public.shipping_orders so
+left join "external".shipping_orders_united sou on sou.public_shipping_order_id = so.id and sou.order_status = 'PAID'
 left join public.shipping_orders_products sop on sop.shipping_order_id = so.id 
 left join public.products p on p.id = sop.product_id 
 left join public.vouchers v on v.id = so.voucher_id 
-left join public.promotions p2 on p2.id= v.promotion_id 
+left join public.promotions p2 on p2.id= v.promotion_id
+left join analyst_acquisition_cl.raf_sales rs on rs.referral_mx_id = so.merchant_id and sou.updated_at  = rs.paid_date::date
 where so.country_id = 50
-	and so.status = 'PAID'
-	and so.reason in ('customer_requested','partner_requested')
-	and sop.quantity > 0
-	and p.title <> 'accessory.air_cradle'
-	group by 1,2,3,5--,4,
-	order by cr_paid_date desc 
+and so.status = 'PAID'
+and so.reason in ('customer_requested','partner_requested')
+and sop.quantity > 0
+and p.title <> 'accessory.air_cradle'
+group by 1,2,3,5--,4,
+order by cr_paid_date desc 

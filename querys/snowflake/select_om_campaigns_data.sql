@@ -1,6 +1,8 @@
-
-select 
-date,
+select
+case when weekiso(date::date)< 10 then concat(yearofweekiso(date::date),'-0',weekiso(date::date))
+else
+concat(yearofweekiso(date::date),'-',weekiso(date::date))
+end as week,
 channel_chile as om_channel,
 campaign,
 cost,
