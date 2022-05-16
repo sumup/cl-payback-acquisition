@@ -30,7 +30,7 @@ ratio = ratio.merge(online_campaigns.groupby(['week']).sum()['purchases_chile'].
 ratio['channel_ratio'] = ratio['purchases_chile_channel']/ratio['purchases_chile_total']
 
 
-crs  = crs.merge(ncro,how='left',left_on=['cr_paid_date','channel','cr_type'],right_on=['ncro_date','channel','cr_type'])
+crs  = crs.merge(ncro,how='left',left_on=['week_date','channel','cr_type'],right_on=['week_date','channel','cr_type'])
 crs = crs.merge()
 
 crs['ratio']

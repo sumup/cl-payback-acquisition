@@ -13,8 +13,8 @@ else 'OTHER'
 end as channel,
 case
 when (ncro.card_reader_type is null and ncro.punto_card_reader_type  is null) then 'AIR'
-when (ncro.card_reader_type is null) then ncro.punto_card_reader_type
-else ncro.card_reader_type
+when (ncro.card_reader_type is null) then upper(ncro.punto_card_reader_type)
+else upper(ncro.card_reader_type)
 end as cr_type,
 count(distinct dim_merchant_id) as qty_ncro
 from analyst_acquisition_cl.new_card_readers_owners ncro
