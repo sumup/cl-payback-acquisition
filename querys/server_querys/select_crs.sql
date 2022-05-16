@@ -39,4 +39,4 @@ and so.reason in ('customer_requested','partner_requested')
 and sop.quantity > 0
 and p.title <> 'accessory.air_cradle'
 group by 1,2,3,5--,4,
-order by cr_paid_date desc 
+order by week_date desc 
