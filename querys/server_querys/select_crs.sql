@@ -21,7 +21,7 @@ select
 	, case 
 		when p.title in ('card_reader.solo_bundle_cradle') then 'SOLO'
 		when p.title in ('accessory.air_cradle') then 'CRADLE'
-		when p.title in ('card_reader.air_bundle') then 'BUNDLE'
+		when p.title in ('card_reader.air_bundle') then 'AIR'
 		else 'AIR' 
 		end as cr_type
 	, sum(sop.quantity) as qty
