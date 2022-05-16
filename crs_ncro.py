@@ -31,9 +31,9 @@ online_campaigns = sn_dwh(role='ACQUISITION_ANALYST_CL').cursor_to_pandas(
 )
 
 online_campaigns.columns = online_campaigns.columns.str.lower()
-ratio = online_campaigns.groupby(['week','om_channel']).sum()['purchases_chile'].reset_index()
+ratio = online_campaigns.groupby(['week_date','om_channel']).sum()['purchases_chile'].reset_index()
 
-ratio = ratio.merge(online_campaigns.groupby(['week']).sum()['purchases_chile'].reset_index(),on='week',how='left',suffixes=['_channel','_total'])
+ratio = ratio.merge(online_campaigns.groupby(['week_date']).sum()['purchases_chile'].reset_index(),on='week_date',how='left',suffixes=['_channel','_total'])
 ratio['channel_ratio'] = ratio['purchases_chile_channel']/ratio['purchases_chile_total']
 ratio['channel'] = 'DIGITAL'
 
@@ -46,4 +46,4 @@ new_crs['qty'] = np.where(new_crs['channel'] == 'DIGITAL',np.where(new_crs['chan
 new_crs['qty_ncro'] = np.where(new_crs['channel'] == 'DIGITAL',np.where(new_crs['channel_ratio'].isnull(),new_crs['qty_ncro'], new_crs['qty_ncro'] * new_crs['channel_ratio']),new_crs['qty_ncro'])
 new_crs = new_crs.drop(['total_price','purchases_chile_channel','purchases_chile_total','channel_ratio'], axis=1)
 
-crs['ratio'] = new_crs['qty']/new_crs['qty_ncro']
+new_crs['ratio'] = new_crs['qty']/new_crs['qty_ncro']
